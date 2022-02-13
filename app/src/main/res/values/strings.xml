@@ -6,10 +6,6 @@
     <string name="try_again">Try again</string>
     <string name="ok">OK</string>
 
-    <string name="repositories">Repositories</string>
-    <string name="last_updated">Last updated: %s</string>
+    <string name="activity">Activity</string>
 
-    <string name="pull_requests">Pull Requests</string>
-    <string name="open">Open</string>
-    <string name="closed">Closed</string>
 </resources>

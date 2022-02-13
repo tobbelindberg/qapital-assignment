@@ -7,7 +7,7 @@ import com.qapital.domain.model.Activities
 import com.qapital.domain.model.Activity
 import com.qapital.domain.model.User
 
-fun ActivityDTO.toDomain() = Activity(message, amount, userId, timestamp)
+fun ActivityDTO.toDomain() = Activity(message.replace("<strong>", "<font color='black'><strong>").replace("</strong>", "</strong></font>"), amount, userId, timestamp)
 
 fun UserDTO.toDomain() = User(userId, displayName, avatarUrl)
 

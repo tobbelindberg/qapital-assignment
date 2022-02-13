@@ -47,7 +47,7 @@ class ActivitiesViewModel
 
         val repositories = mutableListOf<ItemViewModel>()
         state.activities.mapTo(repositories) { repository ->
-            ActivityItemViewModel(repository, resources)
+            ActivityItemViewModel(repository)
         }
         if (state.nextPageLoading) {
             repositories.add(LoadingFooterItemViewModel)

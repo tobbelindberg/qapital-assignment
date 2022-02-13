@@ -51,7 +51,6 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
-                clipToOutline="@{true}"
                 goneUnless="@{!viewModel.errorVisible}"
                 itemDecoration="@{fragment.itemDecoration}"
                 android:layout_width="match_parent"
@@ -86,7 +85,7 @@
             android:layout_marginEnd="48dp"
             android:gravity="center"
             android:text="@string/error_message"
-            android:textColor="@color/grey_700"
+            android:textColor="@color/gray_500"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@id/error_retry_button"
             app:layout_constraintEnd_toEndOf="parent"
