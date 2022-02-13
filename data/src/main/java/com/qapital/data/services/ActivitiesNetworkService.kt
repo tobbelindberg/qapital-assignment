@@ -14,7 +14,7 @@ class ActivitiesNetworkService
     private val restEndpoints: Endpoints,
 ) : ActivitiesService {
 
-    override fun getActivities(from: Date, to: Date): Single<Activities> {
+    override fun getActivities(from: Date, to: Date): Observable<Activities> {
         return restEndpoints.getActivities(from, to)
             .map {
                 it.toDomain()

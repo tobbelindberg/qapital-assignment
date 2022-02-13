@@ -7,6 +7,6 @@ import java.util.*
 
 interface ActivitiesService {
 
-    fun getActivities(from: Date, to: Date): Single<Activities>
+    fun getActivities(from: Date, to: Date): Observable<Activities>
 
 }

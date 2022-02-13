@@ -47,8 +47,7 @@ class ActivitiesInteractor
         val firstPageRange = pager.getFirstPage()
         return activitiesRepo.getActivities(firstPageRange.first, firstPageRange.second)
             .subscribeOn(Schedulers.io())
-            .doOnSuccess { pager.setOldest(it.oldest) }
-            .toObservable()
+            .doOnNext { pager.setOldest(it.oldest) }
             .concatMapIterable { it.activities }
             .concatMap { activity ->
                 userRepo.getUser(activity.userId)
@@ -85,7 +84,6 @@ class ActivitiesInteractor
     private fun nextPageObservable(range: Pair<Date, Date>): Observable<PagePartialState<RichActivity, ActivitiesState>> {
         return activitiesRepo.getActivities(range.first, range.second)
             .subscribeOn(Schedulers.io())
-            .toObservable()
             .concatMapIterable { it.activities }
             .concatMap { activity ->
                 userRepo.getUser(activity.userId)
