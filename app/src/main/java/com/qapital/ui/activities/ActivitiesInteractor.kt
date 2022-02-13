@@ -57,6 +57,11 @@ class ActivitiesInteractor
                     }
             }
             .toList().toObservable()
+            .doOnNext {
+                if (it.isEmpty()) {
+                    pager.onNextPage()
+                }
+            }
             .map<PartialState<ActivitiesState>> { PageLoaded(it) }
             .onErrorReturn { PageError(it) }
             .startWithItem(PageLoading(swipeRefreshing))
