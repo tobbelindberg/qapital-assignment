@@ -1,0 +1,45 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 31
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 31
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions { jvmTarget = JavaVersion.VERSION_11.toString() }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    api project(path: ':domain')
+
+    // OkHttp
+    api "com.squareup.okhttp3:okhttp:4.7.2"
+    api "com.squareup.okhttp3:logging-interceptor:4.7.2"
+
+    // Retrofit
+    api 'com.squareup.retrofit2:retrofit:2.9.0'
+    api 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+    api 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    compileOnly "javax.inject:javax.inject:1"
+}
