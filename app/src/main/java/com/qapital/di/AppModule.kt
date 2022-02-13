@@ -5,6 +5,7 @@ import android.content.res.Resources
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.qapital.BuildConfig
+import com.qapital.data.database.AppDatabase
 import com.qapital.data.network.Endpoints
 import com.qapital.data.network.converters.QueryConverterFactory
 import dagger.Module
@@ -14,12 +15,13 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 
 /**
  * Provides components and modules used all over the place here.
  */
-@Module(includes = [NetworkModule::class])
+@Module(includes = [ServiceModule::class])
 open class AppModule(private val appContext: Context) {
 
     companion object {
@@ -82,4 +84,9 @@ open class AppModule(private val appContext: Context) {
             .create(Endpoints::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideAppDatabase(appContext: Context): AppDatabase {
+        return AppDatabase.getDatabase(appContext)
+    }
 }
