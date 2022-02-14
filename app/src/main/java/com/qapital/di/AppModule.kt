@@ -21,7 +21,7 @@ import javax.inject.Singleton
 /**
  * Provides components and modules used all over the place here.
  */
-@Module(includes = [ServiceModule::class])
+@Module(includes = [NetworkServiceModule::class, DatabaseServiceModule::class])
 open class AppModule(private val appContext: Context) {
 
     companion object {

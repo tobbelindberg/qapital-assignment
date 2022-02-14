@@ -2,7 +2,11 @@ package com.qapital
 
 import android.content.Context
 import android.content.res.Resources
+import android.text.Html
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.text.format.DateFormat
+import android.text.format.DateUtils
 import org.mockito.*
 import org.powermock.api.mockito.PowerMockito
 import java.util.*
@@ -18,13 +22,23 @@ class AndroidMocks {
     init {
         MockitoAnnotations.initMocks(this)
 
-        PowerMockito.mockStatic(DateFormat::class.java)
+        PowerMockito.mockStatic(DateUtils::class.java)
         Mockito.`when`(
-            DateFormat.format(
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.any(Date::class.java)
-            )
+            DateUtils.getRelativeTimeSpanString(ArgumentMatchers.anyLong())
         ).thenReturn("Apr 25, 2020 13:37")
+
+        PowerMockito.mockStatic(Html::class.java)
+        Mockito.mock(SpannableStringBuilder::class.java)
+        Mockito.`when`(
+            Html.fromHtml(
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyInt()
+            )
+        ).thenReturn(SpannableStringBuilder())
+        Mockito.`when`(
+            Html.fromHtml(
+                ArgumentMatchers.anyString())
+        ).thenReturn(SpannableStringBuilder())
 
         Mockito.`when`(mockApplicationContext.resources).thenReturn(mockContextResources)
         Mockito.`when`(

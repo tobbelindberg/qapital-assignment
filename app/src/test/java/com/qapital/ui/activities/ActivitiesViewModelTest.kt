@@ -1,6 +1,7 @@
 package com.qapital.ui.activities
 
-import android.text.format.DateFormat
+import android.text.Html
+import android.text.format.DateUtils
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import com.qapital.AndroidMocks
@@ -20,7 +21,7 @@ import javax.inject.Inject
 
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(DateFormat::class)
+@PrepareForTest(DateUtils::class, Html::class)
 @PowerMockIgnore("javax.net.ssl.*")
 class ActivitiesViewModelTest {
 
@@ -44,17 +45,20 @@ class ActivitiesViewModelTest {
 
     @Before
     fun setup() {
-        okHttpCountDownLatch = CountDownLatch(1)
+        okHttpCountDownLatch = CountDownLatch(2)
         testAppModule = TestAppModule(
             androidMocks.mockApplicationContext,
             {
                 okHttpCountDownLatch.countDown()
             },
-            "/search/repositories?o=desc&s=stars&q=stars:%3E=60000&page=1&per_page=20" to TestFileLoader.readJsonFileFromAssets(
-                "top_repositories.json"
-            )
+            "/activities" to TestFileLoader.readJsonFileFromAssets("activities.json"),
+            "/users/1" to TestFileLoader.readJsonFileFromAssets("user1.json"),
+            "/users/2" to TestFileLoader.readJsonFileFromAssets("user2.json"),
+            "/users/3" to TestFileLoader.readJsonFileFromAssets("user3.json"),
+            "/users/6" to TestFileLoader.readJsonFileFromAssets("user6.json")
         )
-        com.qapital.di.DaggerTestAppComponent.builder().appModule(testAppModule).build().inject(this)
+        com.qapital.di.DaggerTestAppComponent.builder().testAppModule(testAppModule)
+            .build().inject(this)
     }
 
     @After
@@ -64,69 +68,57 @@ class ActivitiesViewModelTest {
     }
 
     @Test
-    fun testAmountOfRepositories() {
+    fun testNumberOfActivities() {
         viewModel.initStateObservable()
         okHttpCountDownLatch.await()
 
         Assert.assertEquals(
-            " The expected amount of repositories does not match",
-            20,
+            " The expected amount of activities does not match",
+            14,
             viewModel.items.get()!!.size
         )
     }
 
     @Test
-    fun testStarCountAtIndexThree() {
+    fun testAmountAtIndexThree() {
         viewModel.initStateObservable()
         okHttpCountDownLatch.await()
 
         Assert.assertEquals(
-            " The expected amount of stars does not match",
-            "205545",
-            (viewModel.items.get()!![3] as ActivityItemViewModel).starCount
+            " The expected amount does not match",
+            "$0.23",
+            (viewModel.items.get()!![3] as ActivityItemViewModel).amount
         )
     }
 
     @Test
-    fun testOwnerAtIndexZero() {
+    fun testAvatarUrlAtIndexZero() {
         viewModel.initStateObservable()
         okHttpCountDownLatch.await()
 
         Assert.assertEquals(
-            "The expected owner does not match",
-            "freeCodeCamp",
-            (viewModel.items.get()!![0] as ActivityItemViewModel).owner
+            "The expected avatarUrl does not match",
+            "http://qapital-ios-testtask.herokuapp.com/avatars/henrik.jpg",
+            (viewModel.items.get()!![0] as ActivityItemViewModel).avatarUrl
         )
     }
 
     @Test
-    fun testRepositoryNameAtIndexTwo() {
-        viewModel.initStateObservable()
-        okHttpCountDownLatch.await()
-
-        Assert.assertEquals(
-            "The expected repository name does not match",
-            "free-programming-books",
-            (viewModel.items.get()!![2] as ActivityItemViewModel).title
-        )
-    }
-
-    @Test
-    fun testCorrectDateParsedAtIndexOne() {
+    fun testCorrectTimestampParsedAtIndexOne() {
         viewModel.initStateObservable()
         okHttpCountDownLatch.await()
 
         val expected = Calendar.getInstance().apply {
-            set(2022, 0, 31, 12, 52, 45)
+            set(2022, 1, 13, 1, 0, 0)
             timeZone = TimeZone.getTimeZone("CET")
         }
 
         val actual = Calendar.getInstance()
-        actual.time = (viewModel.items.get()!![1] as ActivityItemViewModel).activity.updatedAt
+        actual.time = (viewModel.items.get()!![1] as ActivityItemViewModel).activity.timestamp
 
 
         Assert.assertTrue(
-            "The expected updated at was: ${expected.time}. but the actual was: ${actual.time}",
+            "The expected timestamp was: ${expected.time}. but the actual was: ${actual.time}",
             expected.get(Calendar.YEAR) == actual.get(Calendar.YEAR)
                     && expected.get(Calendar.DAY_OF_YEAR) == actual.get(Calendar.DAY_OF_YEAR)
                     && expected.get(Calendar.HOUR_OF_DAY) == actual.get(Calendar.HOUR_OF_DAY)
