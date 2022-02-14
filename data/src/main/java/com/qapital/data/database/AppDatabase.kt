@@ -9,7 +9,7 @@ import com.qapital.data.database.entity.UserEntity
 
 @Database(
     entities = [UserEntity::class],
-    version = 3
+    version = 1
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -27,7 +27,6 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "qapital_database"
                 )
-                    .fallbackToDestructiveMigration()
                     .build().also { INSTANCE = it }
             }
         }

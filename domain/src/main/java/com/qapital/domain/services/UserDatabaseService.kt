@@ -5,7 +5,7 @@ import io.reactivex.rxjava3.core.Observable
 
 interface UserDatabaseService {
 
-    fun insertUser(user: User): Observable<Long>
+    fun insertUser(user: User)
 
-    fun getUser(userId: Long): Observable<Pair<Long, User>>
+    fun getUser(userId: Long): Observable<User>
 }

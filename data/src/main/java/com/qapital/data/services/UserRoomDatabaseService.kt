@@ -1,6 +1,5 @@
 package com.qapital.data.services
 
-import android.util.Log
 import com.qapital.data.database.AppDatabase
 import com.qapital.data.database.entity.UserEntity
 import com.qapital.domain.model.User
@@ -13,26 +12,22 @@ class UserRoomDatabaseService
     appDatabase: AppDatabase,
 ) : UserDatabaseService {
 
+    companion object {
+        private const val EXPIRE_IN_MILLIS = 86400000L // 24h
+    }
+
     private val userDao = appDatabase.userDao()
 
-    override fun insertUser(user: User): Observable<Long> {
-        Log.d("HOHA", "*HOHA* about to insert")
-        return userDao.insertUser(UserEntity.fromDomain(user))
-            .doOnError {
-                Log.e("HOHA", "*HOHA*", it)
-            }
-            .toObservable()
-            .map {
-                Log.d("HOHA", "*HOHA* ${it}")
-
-                it
-            }
+    override fun insertUser(user: User) {
+        userDao.insertUser(UserEntity.fromDomain(user))
     }
 
-    override fun getUser(userId: Long): Observable<Pair<Long, User>> {
+    override fun getUser(userId: Long): Observable<User> {
         return userDao.loadUser(userId)
-            .map {
-                it.timestamp to it.toDomain()
-            }.toObservable()
+            .filter { isNotExpired(it.timestamp) }
+            .map { it.toDomain() }
+            .toObservable()
     }
+
+    private fun isNotExpired(timestamp: Long) = (System.currentTimeMillis() - timestamp) < EXPIRE_IN_MILLIS
 }
