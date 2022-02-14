@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.qapital.BR
 import com.qapital.R
 import com.qapital.base.BaseFragment
 import com.qapital.base.QapitalApplication
@@ -45,7 +46,7 @@ class ActivitiesFragment : BaseFragment<ActivitiesViewModel>(),
     private val binding: FragmentActivitiesBinding by bindingProvider(R.layout.fragment_activities)
 
     val itemBinding = OnItemBindClass<ItemViewModel>()
-        .map(ActivityItemViewModel::class.java, com.qapital.BR.viewModel, R.layout.item_activity)
+        .map(ActivityItemViewModel::class.java, BR.viewModel, R.layout.item_activity)
         .map(LoadingFooterItemViewModel::class.java, ItemBinding.VAR_NONE, R.layout.item_loading_footer)
 
     val itemIds = BindingRecyclerViewAdapterIds

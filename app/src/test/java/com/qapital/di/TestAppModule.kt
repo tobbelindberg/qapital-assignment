@@ -36,7 +36,7 @@ class TestAppModule(
 
     companion object {
         private const val ACCEPT = "Accept"
-        private const val APPLICATION_VND_V3 = "application/vnd.github.v3+json"
+        private const val ACCEPT_JSON = "application/json"
         private const val DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ssX"
     }
 
@@ -90,7 +90,7 @@ class TestAppModule(
         builder.addInterceptor { chain ->
             val original = chain.request()
             val request = original.newBuilder()
-                .addHeader(ACCEPT, APPLICATION_VND_V3).build()
+                .addHeader(ACCEPT, ACCEPT_JSON).build()
 
             chain.proceed(request)
         }
